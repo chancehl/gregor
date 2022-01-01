@@ -11,5 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "ts-node": "^10.4.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1"
   }
 }

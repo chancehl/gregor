@@ -10,7 +10,7 @@ export class DiscordClient extends NativeDiscordClient {
     commands: Collection<string, any>
 
     constructor(options: ClientOptions) {
-        super({ ...options, intents: DEFAULT_INTENTS })
+        super({ ...options, intents: options?.intents ?? DEFAULT_INTENTS })
 
         // Set commands
         if (options.commands) {

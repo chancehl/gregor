@@ -1,11 +1,13 @@
 import 'dotenv/config'
 
 import fs from 'fs'
+import path from 'path'
+
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
 
 const commands = []
-const commandFiles = ['ping.ts']
+const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter((file) => file.includes('.ts'))
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`)

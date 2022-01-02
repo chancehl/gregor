@@ -1,8 +1,11 @@
 import 'dotenv/config'
 
+import fs from 'fs'
+import path from 'path'
+
 import { Client as DiscordClient, Intents, Collection } from 'discord.js'
 
-const commandFiles = ['ping.ts']
+const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter((file) => file.includes('.ts'))
 
 const client = new DiscordClient({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
 

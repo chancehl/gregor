@@ -23,12 +23,14 @@ export class DiscordClient extends NativeDiscordClient {
         if (options.commandsDir) {
             const tempCollection = new Collection<string, any>()
 
-            const allCommandDirectoryFiles = fs.readdirSync(path.join(__dirname, options.commandsDir))
+            const unfilteredCommandFiles = fs.readdirSync(path.join(__dirname, options.commandsDir))
 
-            const commandFiles = allCommandDirectoryFiles.filter((file) => {
+            const commandFiles = unfilteredCommandFiles.filter((file) => {
                 if (file.includes('.ts') || file.includes('.js')) {
-                    return file
+                    return true
                 }
+
+                return false
             })
 
             for (const file of commandFiles) {

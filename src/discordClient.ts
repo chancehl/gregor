@@ -1,4 +1,4 @@
-import { Client as NativeDiscordClient, ClientOptions as NativeClientOptions, Collection, Intents } from 'discord.js'
+import { Client as NativeDiscordClient, ClientOptions as NativeClientOptions, Collection, CommandInteraction, Intents } from 'discord.js'
 import path from 'path'
 import fs from 'fs'
 
@@ -6,8 +6,9 @@ type ClientOptions = Omit<NativeClientOptions, 'intents'> & { commands?: Collect
 
 const DEFAULT_INTENTS = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
 
+type DiscordCommand = { data: any; execute: (interaction: CommandInteraction) => Promise<void> }
 export class DiscordClient extends NativeDiscordClient {
-    commands: Collection<string, any>
+    commands: Collection<string, DiscordCommand>
 
     constructor(options: ClientOptions) {
         super({ ...options, intents: options?.intents ?? DEFAULT_INTENTS })

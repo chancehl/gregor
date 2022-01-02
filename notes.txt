@@ -20,3 +20,5 @@
 /records-refresh
 
 * forces a refersh the current records
+* anyone on the team can refresh
+* will throw if the person isn't on a team

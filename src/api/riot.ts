@@ -10,6 +10,6 @@ export const fetchSummonerByName = async (name: string) => {
     } catch (err: any) {
         console.error('Encountered an error while fetching summoner:', err.message)
 
-        return false
+        return null
     }
 }

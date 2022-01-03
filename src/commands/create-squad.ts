@@ -70,10 +70,10 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     // create team
-    await createSquad({ name: nameInput, ownerId: userId, region: regionInput as Region })
+    await createSquad({ name: nameInput, ownerId: userId, region: regionInput as Region, summonerIds: summoners.map((summoner) => summoner.id) })
 
     // inform invoker
-    await interaction.reply({ content: `Created a squad with name: **${nameInput}**`, ephemeral: true })
+    await interaction.reply({ content: `Created a squad with name: **${nameInput}** and members: **${summoners.length ? summonerNames.join(', ') : '[]'}**`, ephemeral: true })
 }
 
 export default execute

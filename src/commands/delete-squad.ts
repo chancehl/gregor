@@ -3,7 +3,10 @@ import { CommandInteraction } from 'discord.js'
 
 import { deleteSquad, getSquadForUser } from '../db/squad'
 
-export const data = new SlashCommandBuilder().setName('delete-squad').setDescription('Deletes the current users squad')
+// prettier-ignore
+export const data = new SlashCommandBuilder()
+    .setName('delete-squad')
+    .setDescription('Deletes the current users squad')
 
 export const execute = async (interaction: CommandInteraction) => {
     const userId = interaction.user.id

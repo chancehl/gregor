@@ -7,33 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       Int       @id @default(autoincrement())
-  name     String?
-  summoner Summoner? @relation(fields: [summonerId], references: [id])
-
-  summonerId Int
-  @@map("users")
-}
-
 model Squad {
-  id      Int        @id @default(autoincrement())
-  name    String
-  ownerId String
-  members Summoner[]
-  region  Region?
+  id          Int      @id @default(autoincrement())
+  name        String
+  ownerId     String
+  region      Region?
+  summonerIds String[]
 
   @@map("squads")
-}
-
-model Summoner {
-  id      Int    @id
-  name    String
-  Squad   Squad? @relation(fields: [squadId], references: [id])
-  squadId Int?
-
-  User User[]
-  @@map("Summoners")
 }
 
 enum Region {

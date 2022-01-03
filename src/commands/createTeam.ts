@@ -55,6 +55,9 @@ export const execute = async (interaction: CommandInteraction) => {
         return
     }
 
+    // create team
+
+    // inform invoker
     await interaction.reply({ content: `Created a team with name ${nameInput}`, ephemeral: true })
 }
 

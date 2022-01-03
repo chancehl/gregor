@@ -1,18 +1,14 @@
 import axios from 'axios'
 
-import { NA_BASE } from './url'
+import { NA_BASE } from '../constants/url'
 
 export const fetchSummonerByName = async (name: string) => {
     try {
         const response = await axios.get(`${NA_BASE}/lol/summoner/v4/summoners/by-name/${encodeURIComponent(name)}?api_key=${process.env.RIOT_API_KEY}`)
 
-        if (response.status !== 200) {
-            return null
-        }
-
-        return response.data
+        return response.status === 200 ? response.data : null
     } catch (err: any) {
-        console.error(err.message)
+        console.error('Encountered an error while fetching summoner:', err.message)
 
         return false
     }
@@ -20,7 +16,7 @@ export const fetchSummonerByName = async (name: string) => {
 
 export const validateSummonersExist = async (names: string[]) => {
     const promises = names.map((name) => {
-        return new Promise<boolean>((resolve, reject) => {
+        return new Promise<any>((resolve, reject) => {
             try {
                 resolve(fetchSummonerByName(name))
             } catch (err) {

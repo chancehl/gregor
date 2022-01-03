@@ -1,8 +1,12 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { Region } from '@prisma/client'
 import { CommandInteraction } from 'discord.js'
-import { validateSummonersExist } from '../api/riot'
+
+import { fetchSummonerByName } from '../api/riot'
+import { createSquad, getSquadForUser } from '../db/squad'
 
 export const DEFAULT_SQUAD_NAME = 'The goon squad'
+export const DEFAULT_REGION = 'NA'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -13,8 +17,8 @@ export const data = new SlashCommandBuilder()
         .setDescription('The name of the squad')
         .setRequired(false))
     .addStringOption((option) => option
-        .setName('players')
-        .setDescription('A comma separated list of players for your team')
+        .setName('summoners')
+        .setDescription('A comma separated list of summoners for your team')
         .setRequired(false))
     .addStringOption(option =>
 		option.setName('region')
@@ -30,32 +34,35 @@ export const execute = async (interaction: CommandInteraction) => {
 
     // Validate inputs
     const nameInput = interaction.options.getString('name') ?? DEFAULT_SQUAD_NAME
-    const playersInput = interaction.options.getString('players') ?? null
+    const summonersInput = interaction.options.getString('summoners') ?? null
+    const regionInput = interaction.options.getString('region') ?? DEFAULT_REGION
 
-    console.log({ userId, guildId, input: { name: nameInput, players: playersInput } })
-
-    if (nameInput == null) {
-        await interaction.reply('Sorry, you must provide a squad name before I can create one for you.')
-
-        return
-    }
-
-    if (playersInput == null) {
-        await interaction.reply('The list of players is not in the correct format.')
-
-        return
-    }
+    console.log({ userId, guildId, input: { name: nameInput, summoners: summonersInput, region: regionInput } })
 
     // Parse player names
-    const players = playersInput.split(',').map((player) => player.replace(',', ''))
+    const summonerNames = summonersInput == null ? [] : summonersInput.split(',').map((summoner) => summoner.replace(',', ''))
 
-    const { allExist, missingSummoners } = await validateSummonersExist(players)
+    let summoners = []
 
-    if (!allExist) {
-        const formattedMissingSummoners = missingSummoners.map((summoner) => `**${summoner}**`).join(', ')
+    for (const summonerName of summonerNames) {
+        const summoner = await fetchSummonerByName(summonerName)
 
+        if (summoner == null) {
+            await interaction.reply({
+                content: `Hmm... I couldn't find the summoner **${summonerName}**. Are you sure that is the correct summoner name?`,
+                ephemeral: true,
+            })
+        } else {
+            summoners.push(summoner)
+        }
+    }
+
+    // check to see if this player already has a squad
+    const existingSquad = await getSquadForUser(userId)
+
+    if (existingSquad != null) {
         await interaction.reply({
-            content: `Hmm... I couldn't find the following summoners: ${formattedMissingSummoners}. Are you sure those are the correct in-game names?`,
+            content: `It looks like you already own a squad called **${existingSquad.name}**. Please delete that one before creating another.`,
             ephemeral: true,
         })
 
@@ -63,6 +70,7 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     // create team
+    await createSquad({ name: nameInput, ownerId: userId, region: regionInput as Region })
 
     // inform invoker
     await interaction.reply({ content: `Created a squad with name ${nameInput}`, ephemeral: true })

@@ -2,33 +2,29 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 import { validateSummonersExist } from '../api/riot'
 
-export const DEFAULT_TEAM_NAME = 'The goon squad'
+export const DEFAULT_SQUAD_NAME = 'The goon squad'
 
-// prettier-ignore
 export const data = new SlashCommandBuilder()
-    .setName('create-team')
-    .setDescription('Creates a team with the given name')
-    .addStringOption((option) => option
-        .setName('name')
-        .setDescription('The name of the team')
-        .setRequired(true))
-    .addStringOption((option) => option
-        .setName('players')
-        .setDescription('A comma separated list of players for your team')
-        .setRequired(false))
+    .setName('create-squad')
+    .setDescription('Creates a squad with the given name')
+    .addStringOption((option) => option.setName('name').setDescription('The name of the squad').setRequired(false))
+    .addStringOption((option) => option.setName('players').setDescription('A comma separated list of players for your team').setRequired(false))
+    .addStringOption((option) =>
+        option.setName('region').setDescription('The Riot region for this team').setRequired(false).addChoice('NA', 'NA').addChoice('EU', 'EU').addChoice('KR', 'KR'),
+    )
 
 export const execute = async (interaction: CommandInteraction) => {
     const userId = interaction.user.id
     const guildId = interaction.guildId
 
     // Validate inputs
-    const nameInput = interaction.options.getString('name') ?? DEFAULT_TEAM_NAME
+    const nameInput = interaction.options.getString('name') ?? DEFAULT_SQUAD_NAME
     const playersInput = interaction.options.getString('players') ?? null
 
     console.log({ userId, guildId, input: { name: nameInput, players: playersInput } })
 
     if (nameInput == null) {
-        await interaction.reply('Sorry, you must provide a team name before I can create one for you.')
+        await interaction.reply('Sorry, you must provide a squad name before I can create one for you.')
 
         return
     }
@@ -58,7 +54,7 @@ export const execute = async (interaction: CommandInteraction) => {
     // create team
 
     // inform invoker
-    await interaction.reply({ content: `Created a team with name ${nameInput}`, ephemeral: true })
+    await interaction.reply({ content: `Created a squad with name ${nameInput}`, ephemeral: true })
 }
 
 export default execute

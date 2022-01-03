@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { DiscordClient } from './discordClient'
+import { DiscordClient } from './discord-client'
 
 const client = new DiscordClient({ commandsDir: './commands' })
 

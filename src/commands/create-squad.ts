@@ -4,14 +4,25 @@ import { validateSummonersExist } from '../api/riot'
 
 export const DEFAULT_SQUAD_NAME = 'The goon squad'
 
+// prettier-ignore
 export const data = new SlashCommandBuilder()
     .setName('create-squad')
     .setDescription('Creates a squad with the given name')
-    .addStringOption((option) => option.setName('name').setDescription('The name of the squad').setRequired(false))
-    .addStringOption((option) => option.setName('players').setDescription('A comma separated list of players for your team').setRequired(false))
-    .addStringOption((option) =>
-        option.setName('region').setDescription('The Riot region for this team').setRequired(false).addChoice('NA', 'NA').addChoice('EU', 'EU').addChoice('KR', 'KR'),
-    )
+    .addStringOption((option) => option
+        .setName('name')
+        .setDescription('The name of the squad')
+        .setRequired(false))
+    .addStringOption((option) => option
+        .setName('players')
+        .setDescription('A comma separated list of players for your team')
+        .setRequired(false))
+    .addStringOption(option =>
+		option.setName('region')
+			.setDescription('The Riot region for this team')
+			.setRequired(false)
+			.addChoice('NA', 'NA')
+			.addChoice('EU', 'EU')
+			.addChoice('KR', 'KR'))
 
 export const execute = async (interaction: CommandInteraction) => {
     const userId = interaction.user.id

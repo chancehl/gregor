@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
-import { validateSummonerExists, validateSummonersExist } from '../api/riot'
+import { validateSummonersExist } from '../api/riot'
 
 export const DEFAULT_TEAM_NAME = 'The goon squad'
 

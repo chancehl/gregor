@@ -5,7 +5,7 @@ import { CommandInteraction } from 'discord.js'
 import { fetchSummonerByName } from '../api/riot'
 import { createSquad, getSquadForUser } from '../db/squad'
 
-export const DEFAULT_SQUAD_NAME = 'The goon squad'
+export const DEFAULT_SQUAD_NAME = 'the goon squad'
 export const DEFAULT_REGION = 'NA'
 
 // prettier-ignore
@@ -62,7 +62,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
     if (existingSquad != null) {
         await interaction.reply({
-            content: `It looks like you already own a squad called **${existingSquad.name}**. Please delete that one before creating another. Type /delete-squad to delete your existing squad permanently.`,
+            content: `It looks like you already own a squad called **${existingSquad.name}**. Please delete that one before creating another. Type \`/delete-squad\` to delete your existing squad permanently.`,
             ephemeral: true,
         })
 
@@ -73,7 +73,7 @@ export const execute = async (interaction: CommandInteraction) => {
     await createSquad({ name: nameInput, ownerId: userId, region: regionInput as Region, summonerIds: summoners.map((summoner) => summoner.id) })
 
     // inform invoker
-    await interaction.reply({ content: `Created a squad with name: **${nameInput}** and members: **${summoners.length ? summonerNames.join(', ') : '[]'}**`, ephemeral: true })
+    await interaction.reply({ content: `Created a squad with name **${nameInput}** and members **${summoners.length ? summonerNames.join(', ') : 'n/a'}**`, ephemeral: true })
 }
 
 export default execute

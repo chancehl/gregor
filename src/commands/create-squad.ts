@@ -62,7 +62,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
     if (existingSquad != null) {
         await interaction.reply({
-            content: `It looks like you already own a squad called **${existingSquad.name}**. Please delete that one before creating another.`,
+            content: `It looks like you already own a squad called **${existingSquad.name}**. Please delete that one before creating another. Type /delete-squad to delete your existing squad permanently.`,
             ephemeral: true,
         })
 
@@ -73,7 +73,7 @@ export const execute = async (interaction: CommandInteraction) => {
     await createSquad({ name: nameInput, ownerId: userId, region: regionInput as Region })
 
     // inform invoker
-    await interaction.reply({ content: `Created a squad with name ${nameInput}`, ephemeral: true })
+    await interaction.reply({ content: `Created a squad with name: **${nameInput}**`, ephemeral: true })
 }
 
 export default execute

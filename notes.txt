@@ -1,6 +1,6 @@
 % Commands
 
-/records-create-team [name]
+/create-team [name]
 
 * creates team
 * asks for a list of player names

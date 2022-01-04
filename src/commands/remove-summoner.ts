@@ -2,15 +2,15 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 import { fetchSummonerByName } from '../api/riot'
 
-import { addSummonerToSquad, deleteSquad, getSquadForUser } from '../db/squad'
+import { removeSummonerFromSquad, getSquadForUser } from '../db/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
-    .setName('add-summoner')
-    .setDescription('Adds a summoner to the current users squad')
+    .setName('remove-summoner')
+    .setDescription('Removes a summoner to the current users squad')
     .addStringOption(option => option
         .setName('summoner')
-        .setDescription('The summoner you want to add to your team')
+        .setDescription('The summoner you want to remove from your team')
         .setRequired(true))
 
 export const execute = async (interaction: CommandInteraction) => {
@@ -39,13 +39,13 @@ export const execute = async (interaction: CommandInteraction) => {
         return
     }
 
-    if (squad.summonerIds.includes(summoner.id)) {
-        await interaction.reply({ content: `That summoner already exists on your squad.`, ephemeral: true })
+    if (!squad.summonerIds.includes(summoner.id)) {
+        await interaction.reply({ content: `That summoner is not currently on your squad.`, ephemeral: true })
 
         return
     }
 
-    await addSummonerToSquad(squad, summoner.id)
+    await removeSummonerFromSquad(squad, summoner.id)
 
-    await interaction.reply({ content: `Added summoner **${summonerName}** to your squad.`, ephemeral: true })
+    await interaction.reply({ content: `Removed summoner **${summonerName}** from your squad.`, ephemeral: true })
 }

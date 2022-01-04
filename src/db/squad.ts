@@ -17,3 +17,7 @@ export const deleteSquad = async (squadId: number) => {
 export const addSummonerToSquad = async (squad: Squad, summonerId: string) => {
     await prisma.squad.update({ where: { id: squad.id }, data: { ...squad, summonerIds: [...squad.summonerIds, summonerId] } })
 }
+
+export const removeSummonerFromSquad = async (squad: Squad, summonerId: string) => {
+    await prisma.squad.update({ where: { id: squad.id }, data: { ...squad, summonerIds: squad.summonerIds.filter((id) => id != summonerId) } })
+}

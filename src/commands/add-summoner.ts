@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
-import { fetchSummonerByName } from '../api/riot'
+import { getSummonerByName } from '../api/riot'
 
-import { addSummonerToSquad, deleteSquad, getSquadForUser } from '../db/squad'
+import { addSummonerToSquad, getSquadForUser } from '../db/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -31,7 +31,7 @@ export const execute = async (interaction: CommandInteraction) => {
         return
     }
 
-    const summoner = await fetchSummonerByName(summonerName)
+    const summoner = await getSummonerByName(summonerName)
 
     if (summoner == null) {
         await interaction.reply({ content: `Hmm... I couldn't find the summoner **${summonerName}**. Are you sure that is the correct summoner name?`, ephemeral: true })

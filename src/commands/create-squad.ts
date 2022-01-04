@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 import { Region } from '@prisma/client'
 import { CommandInteraction } from 'discord.js'
 
-import { fetchSummonerByName } from '../api/riot'
+import { getSummonerByName } from '../api/riot'
 import { createSquad, getSquadForUser } from '../db/squad'
 
 export const DEFAULT_SQUAD_NAME = 'the goon squad'
@@ -45,7 +45,7 @@ export const execute = async (interaction: CommandInteraction) => {
     let summoners = []
 
     for (const summonerName of summonerNames) {
-        const summoner = await fetchSummonerByName(summonerName)
+        const summoner = await getSummonerByName(summonerName)
 
         if (summoner == null) {
             await interaction.reply({

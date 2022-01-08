@@ -7,7 +7,7 @@ export const createSquad = async (squad: Omit<Squad, 'id'>) => {
 }
 
 export const getSquadForUser = async (ownerId: string) => {
-    return await prisma.squad.findFirst({ where: { ownerId } })
+    return await prisma.squad.findFirst({ where: { ownerId }, include: { records: true } })
 }
 
 export const deleteSquad = async (squadId: number) => {

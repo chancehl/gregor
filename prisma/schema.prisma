@@ -13,8 +13,32 @@ model Squad {
   ownerId     String
   region      Region?
   summonerIds String[]
+  records     Record[]
 
   @@map("squads")
+}
+
+model Record {
+  id           Int        @id @default(autoincrement())
+  type         RecordType
+  owner        String
+  value        String
+  participants String[]
+  squadId      Int?
+  Squad        Squad?     @relation(fields: [squadId], references: [id])
+
+  @@map("records")
+}
+
+enum RecordType {
+  MOST_PERSONAL_KILLS
+  MOST_PERSONAL_DEATHS
+  MOST_PERSONAL_ASSISTS
+  HIGHEST_KDA
+  LOWEST_KDA
+  MOST_GOLD
+  HIGHEST_CS
+  FASTEST_GAME
 }
 
 enum Region {

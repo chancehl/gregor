@@ -25,3 +25,7 @@ export const getSummonerById = async (id: string) => {
         return null
     }
 }
+
+export const getSummonerMatches = async (id: string) => {
+    return []
+}

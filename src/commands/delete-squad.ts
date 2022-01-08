@@ -45,7 +45,7 @@ export const execute = async (interaction: CommandInteraction) => {
                 shouldDelete = true
             }
         } catch (error: any) {
-            await interaction.followUp({ content: 'You did not confirm the deletion. Aborting.', ephemeral: true })
+            await interaction.editReply({ content: 'You did not confirm the deletion. Aborting.' })
 
             return
         }
@@ -54,8 +54,8 @@ export const execute = async (interaction: CommandInteraction) => {
     if (shouldDelete) {
         await deleteSquad(squad.id)
 
-        await interaction.followUp({ content: `Deleted the squad **${squad.name}**`, ephemeral: true })
+        await interaction.editReply({ content: `Deleted the squad **${squad.name}**` })
     } else {
-        await interaction.followUp({ content: `Squad was not deleted.`, ephemeral: true })
+        await interaction.editReply({ content: `Squad was not deleted.` })
     }
 }

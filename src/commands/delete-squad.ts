@@ -3,6 +3,8 @@ import { CommandInteraction, Message } from 'discord.js'
 
 import { deleteSquad, getSquadForUser } from '../db/squad'
 
+export const YES_REPLIES = ['yes', 'y']
+
 // prettier-ignore
 export const data = new SlashCommandBuilder()
     .setName('delete-squad')
@@ -20,11 +22,10 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     // check to make sure they want to continue with this action
-    const yesReplies = ['yes', 'y']
     let shouldDelete = false
 
     await interaction.reply({
-        content: `Are you sure you want to delete your squad **${squad.name}**? This is permanent and can't be undone. Type ${yesReplies.join(' or ')} to continue.`,
+        content: `Are you sure you want to delete your squad **${squad.name}**? This is permanent and can't be undone. Type ${YES_REPLIES.join(' or ')} to continue.`,
         ephemeral: true,
     })
 

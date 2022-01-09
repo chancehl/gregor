@@ -45,6 +45,12 @@ export const execute = async (interaction: CommandInteraction) => {
                 shouldDelete = true
             }
         } catch (error: any) {
+            if (error.message) {
+                await interaction.editReply({ content: `An error ocurred while deleting your squad: ${error.message}` })
+
+                return
+            }
+
             await interaction.editReply({ content: 'You did not confirm the deletion. Aborting.' })
 
             return
@@ -52,10 +58,13 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     if (shouldDelete) {
+        // delete the squad
         await deleteSquad(squad.id)
 
+        // tell the user
         await interaction.editReply({ content: `Deleted the squad **${squad.name}**` })
     } else {
+        // tell the user the squad was not deleted
         await interaction.editReply({ content: `Squad was not deleted.` })
     }
 }

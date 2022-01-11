@@ -11,32 +11,38 @@ export const data = new SlashCommandBuilder()
     .setDescription('Shows the current users squad')
 
 export const execute = async (interaction: CommandInteraction) => {
-    const userName = interaction.user.username
-    const userId = interaction.user.id
+    try {
+        const userName = interaction.user.username
+        const userId = interaction.user.id
 
-    const squad = await getSquadForUser(userId)
+        const squad = await getSquadForUser(userId)
 
-    if (squad == null) {
-        await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })
+        if (squad == null) {
+            await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })
 
-        return
+            return
+        }
+
+        let summoners = []
+
+        for (const summonerId of squad.summonerIds) {
+            const summoner = await getSummonerById(summonerId)
+
+            summoners.push(summoner)
+        }
+
+        await interaction.reply({ embeds: [generateEmbed(userName, squad, summoners)] })
+    } catch (error: any) {
+        await interaction.reply({ content: `An error occurred while fetching your squad: ${error.message}`, ephemeral: true })
     }
-
-    let summoners = []
-
-    for (const summonerId of squad.summonerIds) {
-        const summoner = await getSummonerById(summonerId)
-
-        summoners.push(summoner)
-    }
-
-    await interaction.reply({ embeds: [generateEmbed(userName, squad, summoners)] })
 }
 
 const generateEmbed = (userName: string, squad: Squad, summoners: any[]) => {
     // inside a command, event listener, etc.
+    const embed = new MessageEmbed()
+
     return (
-        new MessageEmbed()
+        embed
             .setColor('#0099ff')
             .setTitle(squad.name.toUpperCase())
             .setDescription(`${userName}'s squad`)

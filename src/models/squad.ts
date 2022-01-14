@@ -1,7 +1,7 @@
 import { PrismaClient, Squad } from '@prisma/client'
 import { GregorLogger } from '../logger'
 
-import { prisma } from './client'
+import { prisma } from '../services/prisma'
 
 export class SquadManager {
     static client: PrismaClient = prisma

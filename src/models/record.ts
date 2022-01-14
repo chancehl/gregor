@@ -1,6 +1,6 @@
 import { Record } from '@prisma/client'
 
-import prisma from './client'
+import prisma from '../services/prisma'
 
 export const upsertRecords = async (records: Record[]) => {
     for (const record of records) {

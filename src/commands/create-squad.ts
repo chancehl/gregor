@@ -3,6 +3,7 @@ import { Region } from '@prisma/client'
 import { CommandInteraction } from 'discord.js'
 
 import { getSummonerByName } from '../api/riot'
+import { GregorLogger } from '../logger'
 import { SquadManager } from '../models/squad'
 
 export const DEFAULT_SQUAD_NAME = 'the goon squad'
@@ -29,6 +30,8 @@ export const data = new SlashCommandBuilder()
 			.addChoice('KR', 'KR'))
 
 export const execute = async (interaction: CommandInteraction) => {
+    const logger = GregorLogger.getInstance()
+
     const userId = interaction.user.id
     const guildId = interaction.guildId
 
@@ -36,8 +39,6 @@ export const execute = async (interaction: CommandInteraction) => {
     const nameInput = interaction.options.getString('name') ?? DEFAULT_SQUAD_NAME
     const summonersInput = interaction.options.getString('summoners') ?? null
     const regionInput = interaction.options.getString('region') ?? DEFAULT_REGION
-
-    console.log({ userId, guildId, input: { name: nameInput, summoners: summonersInput, region: regionInput } })
 
     // Parse player names
     const summonerNames = summonersInput == null ? [] : summonersInput.split(',').map((summoner) => summoner.replace(',', ''))
@@ -61,6 +62,8 @@ export const execute = async (interaction: CommandInteraction) => {
     const existingSquad = await SquadManager.getSquadForUser(userId)
 
     if (existingSquad != null) {
+        logger.warn(`${interaction.user.username} (id: ${interaction.user.id}) tried to create a squad, but already had one (name: ${existingSquad.name}, id: ${existingSquad.id})`)
+
         await interaction.reply({
             content: `It looks like you already own a squad called **${existingSquad.name}**. Please delete that one before creating another. Type \`/delete-squad\` to delete your existing squad permanently.`,
             ephemeral: true,
@@ -80,6 +83,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
     // inform invoker
     const formattedMembers = summoners.length ? summonerNames.join(', ') : null
+
     let content = `Created a squad with name **${nameInput}**.`
 
     if (formattedMembers == null) {

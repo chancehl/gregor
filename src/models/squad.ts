@@ -48,7 +48,7 @@ export class SquadManager {
                 },
             })
         } catch (error: any) {
-            console.log(`Encountered an error while running prisma.squad.update: ${error.message}`)
+            this.logger.error(`Encountered an error while running prisma.squad.update: ${error.message}`)
 
             throw error
         }

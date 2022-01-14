@@ -7,7 +7,7 @@ import { CommandInteraction } from 'discord.js'
 import { SquadManager } from '../models/squad'
 import { upsertRecords } from '../models/record'
 
-import { getSummonerMatches } from '../api/riot'
+import { getSummonerMatchIds, getSummonerMatchData } from '../api/riot'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -31,10 +31,14 @@ export const execute = async (interaction: CommandInteraction) => {
     // compute the latest records
     await promisify(setTimeout)(4000)
 
-    for (const summonerId of squad.summonerIds) {
-        const matches = await getSummonerMatches(summonerId)
+    for (const summonerPuuid of squad.summonerPuuids) {
+        const matchIds = await getSummonerMatchIds(summonerPuuid)
 
-        console.log({ matches })
+        for (const matchId of matchIds) {
+            const match = await getSummonerMatchData(matchId)
+
+            console.log({ match })
+        }
     }
 
     const records: Record[] = []

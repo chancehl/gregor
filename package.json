@@ -1,31 +1,31 @@
 {
-  "name": "league-records",
-  "version": "1.0.0",
-  "description": "A discord bot for keeping in-game scores",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./src/bot.ts",
-    "register": "ts-node ./src/register.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@discordjs/builders": "^0.11.0",
-    "@discordjs/rest": "^0.2.0-canary.0",
-    "@prisma/client": "^3.7.0",
-    "axios": "^0.24.0",
-    "discord-api-types": "^0.26.1",
-    "discord.js": "^13.5.0",
-    "dotenv": "^10.0.0",
-    "typescript": "^4.5.4"
-  },
-  "devDependencies": {
-    "@types/node": "^17.0.6",
-    "nodemon": "^2.0.15",
-    "prettier": "^2.5.1",
-    "prisma": "^3.7.0",
-    "ts-node": "^10.4.0"
-  }
+    "name": "gregor",
+    "version": "1.0.0",
+    "description": "A discord bot for keeping in-game scores",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon ./src/bot.ts",
+        "register": "ts-node ./src/register.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@discordjs/builders": "^0.11.0",
+        "@discordjs/rest": "^0.2.0-canary.0",
+        "@prisma/client": "^3.7.0",
+        "axios": "^0.24.0",
+        "discord-api-types": "^0.26.1",
+        "discord.js": "^13.5.0",
+        "dotenv": "^10.0.0",
+        "typescript": "^4.5.4"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.6",
+        "nodemon": "^2.0.15",
+        "prettier": "^2.5.1",
+        "prisma": "^3.7.0",
+        "ts-node": "^10.4.0"
+    }
 }

@@ -1,35 +1,44 @@
 import { PrismaClient, Squad } from '@prisma/client'
+import { GregorLogger } from '../logger'
 
 import { prisma } from './client'
 
 export class SquadManager {
-    private static client: PrismaClient
+    static client: PrismaClient = prisma
 
-    constructor(client: PrismaClient) {
-        SquadManager.client = client ?? prisma
-    }
+    static logger = GregorLogger.getInstance()
+
+    constructor() {}
 
     static createSquad = async (squad: Omit<Squad, 'id'>) => {
-        return await SquadManager.client.squad.create({ data: { ...squad } })
+        return await this.client.squad.create({ data: { ...squad } })
     }
 
     static getSquadForUser = async (ownerId: string) => {
         try {
-            return await SquadManager.client.squad.findFirst({ where: { ownerId }, include: { records: true } })
+            this.logger.debug(`Finding squad for ownerId: ${ownerId}`)
+
+            const squad = await this.client.squad.findFirst({ where: { ownerId }, include: { records: true } })
+
+            if (squad == null) {
+                throw new Error(`Could not find squad for ownerId: ${ownerId}`)
+            }
+
+            return squad
         } catch (error: any) {
-            console.log(`Encountered an error while running prisma.squad.findFirst: ${error.message}`)
+            this.logger.error(`Encountered an error while running prisma.squad.findFirst: ${error.message}`)
 
             throw error
         }
     }
 
     static deleteSquad = async (squadId: number) => {
-        await SquadManager.client.squad.delete({ where: { id: squadId } })
+        await this.client.squad.delete({ where: { id: squadId } })
     }
 
     static addSummonerToSquad = async (squad: Squad, summonerId: string, summonerPuuid: string) => {
         try {
-            await SquadManager.client.squad.update({
+            await this.client.squad.update({
                 where: {
                     id: squad.id,
                 },

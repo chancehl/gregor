@@ -3,6 +3,7 @@ import { Squad } from '@prisma/client'
 import { CommandInteraction, MessageEmbed } from 'discord.js'
 
 import { getSummonerById } from '../api/riot'
+import { GregorLogger } from '../logger'
 import { SquadManager } from '../models/squad'
 
 // prettier-ignore
@@ -11,6 +12,8 @@ export const data = new SlashCommandBuilder()
     .setDescription('Shows the current users squad')
 
 export const execute = async (interaction: CommandInteraction) => {
+    const logger = GregorLogger.getInstance()
+
     try {
         const userName = interaction.user.username
         const userId = interaction.user.id
@@ -18,7 +21,17 @@ export const execute = async (interaction: CommandInteraction) => {
         const squad = await SquadManager.getSquadForUser(userId)
 
         if (squad == null) {
+            logger.warn(`${userName} (id: ${userId}) ran /squad but does not own a squad`)
+
             await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })
+
+            return
+        }
+
+        if (squad.summonerIds.length < 1) {
+            logger.warn(`${userName} (id: ${userId}) requested their squad information but their squad has no members.`)
+
+            await interaction.reply({ content: `Your squad has no members. Try adding one first by running the \`/add-summoner\` command.`, ephemeral: true })
 
             return
         }

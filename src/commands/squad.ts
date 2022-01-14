@@ -3,7 +3,7 @@ import { Squad } from '@prisma/client'
 import { CommandInteraction, MessageEmbed } from 'discord.js'
 
 import { getSummonerById } from '../api/riot'
-import { getSquadForUser } from '../models/squad'
+import { SquadManager } from '../models/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -15,7 +15,7 @@ export const execute = async (interaction: CommandInteraction) => {
         const userName = interaction.user.username
         const userId = interaction.user.id
 
-        const squad = await getSquadForUser(userId)
+        const squad = await SquadManager.getSquadForUser(userId)
 
         if (squad == null) {
             await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })

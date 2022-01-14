@@ -3,7 +3,7 @@ import { Region } from '@prisma/client'
 import { CommandInteraction } from 'discord.js'
 
 import { getSummonerByName } from '../api/riot'
-import { createSquad, getSquadForUser } from '../models/squad'
+import { SquadManager } from '../models/squad'
 
 export const DEFAULT_SQUAD_NAME = 'the goon squad'
 export const DEFAULT_REGION = 'NA'
@@ -58,7 +58,7 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     // check to see if this player already has a squad
-    const existingSquad = await getSquadForUser(userId)
+    const existingSquad = await SquadManager.getSquadForUser(userId)
 
     if (existingSquad != null) {
         await interaction.reply({
@@ -70,7 +70,7 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     // create team
-    await createSquad({
+    await SquadManager.createSquad({
         name: nameInput,
         ownerId: userId,
         region: regionInput as Region,

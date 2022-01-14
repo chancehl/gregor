@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 import { getSummonerByName } from '../api/riot'
 
-import { addSummonerToSquad, getSquadForUser } from '../models/squad'
+import { SquadManager } from '../models/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -18,7 +18,7 @@ export const execute = async (interaction: CommandInteraction) => {
         const userId = interaction.user.id
         const summonerName = interaction.options.getString('summoner')
 
-        const squad = await getSquadForUser(userId)
+        const squad = await SquadManager.getSquadForUser(userId)
 
         if (squad == null) {
             await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })
@@ -46,7 +46,7 @@ export const execute = async (interaction: CommandInteraction) => {
             return
         }
 
-        await addSummonerToSquad(squad, summoner.id, summoner.puuid)
+        await SquadManager.addSummonerToSquad(squad, summoner.id, summoner.puuid)
 
         await interaction.reply({ content: `Added summoner **${summonerName}** to your squad.`, ephemeral: true })
     } catch (error: any) {

@@ -7,7 +7,13 @@ export const createSquad = async (squad: Omit<Squad, 'id'>) => {
 }
 
 export const getSquadForUser = async (ownerId: string) => {
-    return await prisma.squad.findFirst({ where: { ownerId }, include: { records: true } })
+    try {
+        return await prisma.squad.findFirst({ where: { ownerId }, include: { records: true } })
+    } catch (error: any) {
+        console.log(`Encountered an error while running prisma.squad.findFirst: ${error.message}`)
+
+        throw error
+    }
 }
 
 export const deleteSquad = async (squadId: number) => {
@@ -17,11 +23,18 @@ export const deleteSquad = async (squadId: number) => {
 export const addSummonerToSquad = async (squad: Squad, summonerId: string, summonerPuuid: string) => {
     try {
         await prisma.squad.update({
-            where: { id: squad.id },
-            data: { ...squad, summonerIds: [...squad.summonerIds, summonerId], summonerPuuids: [...squad.summonerPuuids, summonerPuuid] },
+            where: {
+                id: squad.id,
+            },
+            data: {
+                summonerIds: [...squad.summonerIds, summonerId],
+                summonerPuuids: [...squad.summonerPuuids, summonerPuuid],
+            },
         })
     } catch (error: any) {
         console.log(`Encountered an error while running prisma.squad.update: ${error.message}`)
+
+        throw error
     }
 }
 

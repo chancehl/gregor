@@ -79,7 +79,14 @@ export const execute = async (interaction: CommandInteraction) => {
     })
 
     // inform invoker
-    await interaction.reply({ content: `Created a squad with name **${nameInput}** and members **${summoners.length ? summonerNames.join(', ') : 'n/a'}**`, ephemeral: true })
+    const formattedMembers = summoners.length ? summonerNames.join(', ') : null
+    let content = `Created a squad with name **${nameInput}**.`
+
+    if (formattedMembers == null) {
+        content = `${content} To add summoners to your squad, run the \`/add-summoner\` command.`
+    }
+
+    await interaction.reply({ content, ephemeral: true })
 }
 
 export default execute

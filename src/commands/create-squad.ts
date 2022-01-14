@@ -77,8 +77,8 @@ export const execute = async (interaction: CommandInteraction) => {
         name: nameInput,
         ownerId: userId,
         region: regionInput as Region,
-        summonerIds: summoners.map((summoner) => summoner.id),
-        summonerPuuids: summoners.map((summoner) => summoner.puuid),
+        refreshedOn: new Date().toISOString(),
+        summoners,
     })
 
     // inform invoker

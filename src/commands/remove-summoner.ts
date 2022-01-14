@@ -39,13 +39,13 @@ export const execute = async (interaction: CommandInteraction) => {
         return
     }
 
-    if (!squad.summonerIds.includes(summoner.id)) {
+    if (squad.summoners.find((squadSummoner) => squadSummoner.id === summoner.id)) {
         await interaction.reply({ content: `That summoner is not currently on your squad.`, ephemeral: true })
 
         return
     }
 
-    await SquadManager.removeSummonerFromSquad(squad, summoner.id, summoner.puuid)
+    await SquadManager.removeSummonerFromSquad(squad, summoner.id)
 
     await interaction.reply({ content: `Removed summoner **${summonerName}** from your squad.`, ephemeral: true })
 }

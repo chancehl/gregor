@@ -8,15 +8,23 @@ datasource db {
 }
 
 model Squad {
-  id             Int      @id @default(autoincrement())
-  name           String
-  ownerId        String
-  region         Region?
-  summonerIds    String[]
-  summonerPuuids String[]
-  records        Record[]
+  id          Int        @id @default(autoincrement())
+  name        String
+  ownerId     String
+  region      Region?
+  summoners   Summoner[]
+  records     Record[]
+  refreshedOn String
 
   @@map("squads")
+}
+
+model Summoner {
+  id      String @id
+  puuid   String
+  name    String
+  Squad   Squad? @relation(fields: [squadId], references: [id])
+  squadId Int?
 }
 
 model Record {

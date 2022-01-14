@@ -29,9 +29,15 @@ export const getSummonerById = async (id: string) => {
     }
 }
 
-export const getSummonerMatchIds = async (summonerPuuid: string) => {
+export const getSummonerMatchIds = async (summonerPuuid: string, options?: { from?: string }) => {
     try {
-        const response = await axios.get(`${AMERICAS_BASE}/lol/match/v5/matches/by-puuid/${encodeURIComponent(summonerPuuid)}/ids?api_key=${process.env.RIOT_API_KEY}`)
+        let uri = `${AMERICAS_BASE}/lol/match/v5/matches/by-puuid/${encodeURIComponent(summonerPuuid)}/ids?api_key=${process.env.RIOT_API_KEY}`
+
+        if (options?.from) {
+            uri = `${uri}&startTime=${new Date(options.from).getTime()}`
+        }
+
+        const response = await axios.get(uri)
 
         return response.status === 200 ? response.data : null
     } catch (err: any) {

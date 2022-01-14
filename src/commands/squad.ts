@@ -28,7 +28,7 @@ export const execute = async (interaction: CommandInteraction) => {
             return
         }
 
-        if (squad.summonerIds.length < 1) {
+        if (squad.summoners.length < 1) {
             logger.warn(`${userName} (id: ${userId}) requested their squad information but their squad has no members.`)
 
             await interaction.reply({ content: `Your squad has no members. Try adding one first by running the \`/add-summoner\` command.`, ephemeral: true })
@@ -38,8 +38,8 @@ export const execute = async (interaction: CommandInteraction) => {
 
         let summoners = []
 
-        for (const summonerId of squad.summonerIds) {
-            const summoner = await getSummonerById(summonerId)
+        for (const squadSummoner of squad.summoners) {
+            const summoner = await getSummonerById(squadSummoner.id)
 
             summoners.push(summoner)
         }

@@ -40,13 +40,13 @@ export const execute = async (interaction: CommandInteraction) => {
             return
         }
 
-        if (squad.summonerIds.includes(summoner.id)) {
+        if (squad.summoners.find((squadSummoner) => squadSummoner.id === summoner.id)) {
             await interaction.reply({ content: `That summoner already exists on your squad.`, ephemeral: true })
 
             return
         }
 
-        await SquadManager.addSummonerToSquad(squad, summoner.id, summoner.puuid)
+        await SquadManager.addSummonerToSquad(squad, summoner)
 
         await interaction.reply({ content: `Added summoner **${summonerName}** to your squad.`, ephemeral: true })
     } catch (error: any) {

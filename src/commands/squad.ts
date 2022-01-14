@@ -3,7 +3,7 @@ import { Squad } from '@prisma/client'
 import { CommandInteraction, MessageEmbed } from 'discord.js'
 
 import { getSummonerById } from '../api/riot'
-import { getSquadForUser } from '../db/squad'
+import { getSquadForUser } from '../models/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()

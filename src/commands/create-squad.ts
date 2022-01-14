@@ -3,7 +3,7 @@ import { Region } from '@prisma/client'
 import { CommandInteraction } from 'discord.js'
 
 import { getSummonerByName } from '../api/riot'
-import { createSquad, getSquadForUser } from '../db/squad'
+import { createSquad, getSquadForUser } from '../models/squad'
 
 export const DEFAULT_SQUAD_NAME = 'the goon squad'
 export const DEFAULT_REGION = 'NA'

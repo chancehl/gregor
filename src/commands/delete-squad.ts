@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction, Message } from 'discord.js'
 
-import { deleteSquad, getSquadForUser } from '../db/squad'
+import { deleteSquad, getSquadForUser } from '../models/squad'
 
 export const YES_REPLIES = ['yes', 'y']
 

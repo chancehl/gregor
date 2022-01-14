@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 import { getSummonerByName } from '../api/riot'
 
-import { addSummonerToSquad, getSquadForUser } from '../db/squad'
+import { addSummonerToSquad, getSquadForUser } from '../models/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()

@@ -4,8 +4,8 @@ import { Record } from '@prisma/client'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 
-import { getSquadForUser } from '../db/squad'
-import { upsertRecords } from '../db/record'
+import { getSquadForUser } from '../models/squad'
+import { upsertRecords } from '../models/record'
 
 import { getSummonerMatches } from '../api/riot'
 

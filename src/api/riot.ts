@@ -55,9 +55,7 @@ export const getSummonerMatchIds = async (summonerPuuid: string, options?: { fro
 
 export const getSummonerMatchData = async (matchId: string) => {
     try {
-        console.log({ url: `${AMERICAS_BASE}/lol/match/v5/matches/${matchId}/ids?api_key=${process.env.RIOT_API_KEY}` })
-
-        const response = await axios.get(`${AMERICAS_BASE}/lol/match/v5/matches/${matchId}/ids?api_key=${process.env.RIOT_API_KEY}`)
+        const response = await axios.get(`${AMERICAS_BASE}/lol/match/v5/matches/${matchId}?api_key=${process.env.RIOT_API_KEY}`)
 
         return response.status === 200 ? response.data : null
     } catch (err: any) {

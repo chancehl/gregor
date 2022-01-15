@@ -13,6 +13,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
+    "prisma": {
+        "schema": "./src/prisma/schema.prisma"
+    },
     "dependencies": {
         "@discordjs/builders": "^0.11.0",
         "@discordjs/rest": "^0.2.0-canary.0",

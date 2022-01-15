@@ -49,10 +49,14 @@ export const execute = async (interaction: CommandInteraction) => {
         const summoner = await getSummonerByName(summonerName)
 
         if (summoner == null) {
+            logger.error(`${userId} attempted to create a squad with the summoners: ${summonerNames.join(', ')} but the summoner ${summonerName} doesn't exist`)
+
             await interaction.reply({
                 content: `Hmm... I couldn't find the summoner **${summonerName}**. Are you sure that is the correct summoner name?`,
                 ephemeral: true,
             })
+
+            return
         } else {
             summoners.push(summoner)
         }
@@ -62,7 +66,9 @@ export const execute = async (interaction: CommandInteraction) => {
     const existingSquad = await SquadManager.getSquadForUser(userId)
 
     if (existingSquad != null) {
-        logger.warn(`${interaction.user.username} (id: ${interaction.user.id}) tried to create a squad, but already had one (name: ${existingSquad.name}, id: ${existingSquad.id})`)
+        logger.error(
+            `${interaction.user.username} (id: ${interaction.user.id}) tried to create a squad, but already had one (name: ${existingSquad.name}, id: ${existingSquad.id})`,
+        )
 
         await interaction.reply({
             content: `It looks like you already own a squad called **${existingSquad.name}**. Please delete that one before creating another. Type \`/delete-squad\` to delete your existing squad permanently.`,

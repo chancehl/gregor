@@ -24,7 +24,7 @@ export const execute = async (interaction: CommandInteraction) => {
         const squad = await SquadManager.getSquadForUser(userId)
 
         if (squad == null) {
-            logger.warn(`${userId} attempted to add ${summonerName} to their squad, but that user does not own a squad`)
+            logger.error(`${userId} attempted to add ${summonerName} to their squad, but that user does not own a squad`)
 
             await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })
 
@@ -32,7 +32,7 @@ export const execute = async (interaction: CommandInteraction) => {
         }
 
         if (summonerName == null) {
-            logger.warn(`${userId} attempted to add ${summonerName} to their squad, but that summoner name is invalid`)
+            logger.error(`${userId} attempted to add ${summonerName} to their squad, but that summoner name is invalid`)
 
             await interaction.reply({ content: `You must provide a summoner name.`, ephemeral: true })
 
@@ -42,7 +42,7 @@ export const execute = async (interaction: CommandInteraction) => {
         const summoner = await getSummonerByName(summonerName)
 
         if (summoner == null) {
-            logger.warn(`${userId} attempted to add ${summonerName} to their squad, but that summoner doesn't exist`)
+            logger.error(`${userId} attempted to add ${summonerName} to their squad, but that summoner doesn't exist`)
 
             await interaction.reply({ content: `Hmm... I couldn't find the summoner **${summonerName}**. Are you sure that is the correct summoner name?`, ephemeral: true })
 
@@ -50,7 +50,7 @@ export const execute = async (interaction: CommandInteraction) => {
         }
 
         if (squad.summoners.find((squadSummoner) => squadSummoner.id === summoner.id)) {
-            logger.warn(`${userId} attempted to add ${summonerName} to their squad, but that summoner already exists on their squad.`)
+            logger.error(`${userId} attempted to add ${summonerName} to their squad, but that summoner already exists on their squad.`)
 
             await interaction.reply({ content: `That summoner already exists on your squad.`, ephemeral: true })
 

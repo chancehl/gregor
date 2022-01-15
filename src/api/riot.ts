@@ -6,24 +6,30 @@ import { GregorLogger } from '../logger'
 const logger = GregorLogger.getInstance()
 
 export const getSummonerByName = async (name: string) => {
+    const uriBase = `${NA_BASE}/lol/summoner/v4/summoners/by-name/${encodeURIComponent(name)}`
+    const uri = uriBase + `?api_key=${process.env.RIOT_API_KEY}`
+
     try {
-        const response = await axios.get(`${NA_BASE}/lol/summoner/v4/summoners/by-name/${encodeURIComponent(name)}?api_key=${process.env.RIOT_API_KEY}`)
+        const response = await axios.get(uri)
 
         return response.status === 200 ? response.data : null
-    } catch (err: any) {
-        logger.error('Encountered an error while fetching summoner:', err.message)
+    } catch (error: any) {
+        logger.error(`Riot API endpoint ${uriBase} returned the following error: ${error}`)
 
         return null
     }
 }
 
 export const getSummonerById = async (id: string) => {
+    const uriBase = `${NA_BASE}/lol/summoner/v4/summoners/${encodeURIComponent(id)}`
+    const uri = uriBase + `?api_key=${process.env.RIOT_API_KEY}`
+
     try {
-        const response = await axios.get(`${NA_BASE}/lol/summoner/v4/summoners/${encodeURIComponent(id)}?api_key=${process.env.RIOT_API_KEY}`)
+        const response = await axios.get(uri)
 
         return response.status === 200 ? response.data : null
-    } catch (err: any) {
-        logger.error(`Encountered an error while fetching summoner: ${err.message}`)
+    } catch (error: any) {
+        logger.error(`Riot API endpoint ${uriBase} returned the following error: ${error}`)
 
         return null
     }

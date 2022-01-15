@@ -43,6 +43,8 @@ export const execute = async (interaction: CommandInteraction) => {
 
             if (firstReplyContent != null && YES_REPLIES.includes(firstReplyContent.toLowerCase())) {
                 shouldDelete = true
+
+                firstReply?.delete()
             }
         } catch (error: any) {
             if (error.message) {

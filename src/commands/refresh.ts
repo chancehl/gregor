@@ -28,6 +28,12 @@ export const execute = async (interaction: CommandInteraction) => {
         return
     }
 
+    if (squad.summoners.length < 1) {
+        await interaction.reply({ content: `There are no summoners on your squad to hold records. Type \`/add-summoner\` to add one to your squad.`, ephemeral: true })
+
+        return
+    }
+
     // tell the interaction to defer
     await interaction.deferReply({ ephemeral: true })
 
@@ -36,6 +42,8 @@ export const execute = async (interaction: CommandInteraction) => {
 
     for (const summoner of squad.summoners) {
         const matchIds = await getSummonerMatchIds(summoner.puuid, { from: squad.refreshedOn })
+
+        logger.debug(`Fetched the following match ids for summoner ${summoner.name} (id: ${summoner.id}): ${matchIds.join(', ')}`)
 
         if (matchIds.length < 1) {
             logger.warn(`Could not find any matches after ${squad.refreshedOn} for summoner ${summoner.name} (puuid: ${summoner.puuid})`)

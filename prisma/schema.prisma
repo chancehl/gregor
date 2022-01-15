@@ -48,6 +48,7 @@ enum RecordType {
   MOST_GOLD
   HIGHEST_CS
   FASTEST_GAME
+  LOWEST_CS
 }
 
 enum Region {

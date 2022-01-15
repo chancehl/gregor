@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { Squad } from '@prisma/client'
+import { Squad, RecordType } from '@prisma/client'
 import { CommandInteraction, MessageEmbed } from 'discord.js'
 
 import { getSummonerById } from '../api/riot'
@@ -54,6 +54,14 @@ const generateEmbed = (userName: string, squad: Squad, summoners: any[]) => {
     // inside a command, event listener, etc.
     const embed = new MessageEmbed()
 
+    const dummyRecords = [
+        ...Object.keys(RecordType).map((key) => ({
+            name: key.replaceAll('_', ' ').toLowerCase(),
+            value: 'todo',
+            inline: true,
+        })),
+    ]
+
     return (
         embed
             .setColor('#0099ff')
@@ -64,15 +72,7 @@ const generateEmbed = (userName: string, squad: Squad, summoners: any[]) => {
             .addFields(
                 { name: 'Squad members', value: summoners.map((summoner) => summoner.name).join(', ') },
                 // TODO: map these out from the records saved in db
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
+                ...dummyRecords,
             )
     )
 }

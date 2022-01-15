@@ -4,7 +4,8 @@ import { CommandInteraction, MessageEmbed } from 'discord.js'
 
 import { getSummonerById } from '../api/riot'
 import { GregorLogger } from '../logger'
-import { SquadManager } from '../models/squad'
+import { EmbedService } from '../services/embed'
+import { SquadService } from '../services/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -18,7 +19,7 @@ export const execute = async (interaction: CommandInteraction) => {
         const userName = interaction.user.username
         const userId = interaction.user.id
 
-        const squad = await SquadManager.getSquadForUser(userId)
+        const squad = await SquadService.getSquadForUser(userId)
 
         if (squad == null) {
             logger.warn(`${userName} (id: ${userId}) ran /squad but does not own a squad`)
@@ -44,35 +45,8 @@ export const execute = async (interaction: CommandInteraction) => {
             summoners.push(summoner)
         }
 
-        await interaction.reply({ embeds: [generateEmbed(userName, squad, summoners)] })
+        await interaction.reply({ embeds: [EmbedService.generateSquadEmbed(userName, squad, summoners)] })
     } catch (error: any) {
         await interaction.reply({ content: `An error occurred while fetching your squad: ${error.message}`, ephemeral: true })
     }
-}
-
-const generateEmbed = (userName: string, squad: Squad, summoners: any[]) => {
-    // inside a command, event listener, etc.
-    const embed = new MessageEmbed()
-
-    const dummyRecords = [
-        ...Object.keys(RecordType).map((key) => ({
-            name: key.replaceAll('_', ' ').toLowerCase(),
-            value: 'todo',
-            inline: true,
-        })),
-    ]
-
-    return (
-        embed
-            .setColor('#0099ff')
-            .setTitle(squad.name.toUpperCase())
-            .setDescription(`${userName}'s squad`)
-            .setThumbnail(`https://static.wikia.nocookie.net/leagueoflegends/images/5/5f/Gregor_Shopkeeper_Render.png/revision/latest?cb=20200601034901`)
-            // .setImage(`https://static.wikia.nocookie.net/leagueoflegends/images/5/5f/Gregor_Shopkeeper_Render.png/revision/latest?cb=20200601034901`)
-            .addFields(
-                { name: 'Squad members', value: summoners.map((summoner) => summoner.name).join(', ') },
-                // TODO: map these out from the records saved in db
-                ...dummyRecords,
-            )
-    )
 }

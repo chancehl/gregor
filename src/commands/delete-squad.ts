@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction, Message } from 'discord.js'
 
-import { SquadManager } from '../models/squad'
+import { SquadService } from '../services/squad'
 
 export const YES_REPLIES = ['yes', 'y']
 
@@ -13,7 +13,7 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction: CommandInteraction) => {
     const userId = interaction.user.id
 
-    const squad = await SquadManager.getSquadForUser(userId)
+    const squad = await SquadService.getSquadForUser(userId)
 
     if (squad == null) {
         await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one`, ephemeral: true })
@@ -61,7 +61,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
     if (shouldDelete) {
         // delete the squad
-        await SquadManager.deleteSquad(squad.id)
+        await SquadService.deleteSquad(squad.id)
 
         // tell the user
         await interaction.editReply({ content: `Deleted the squad **${squad.name}**` })

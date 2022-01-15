@@ -1,9 +1,9 @@
 import { PrismaClient, Squad, Summoner } from '@prisma/client'
 import { GregorLogger } from '../logger'
 
-import { prisma } from '../services/prisma'
+import { prisma } from './prisma'
 
-export class SquadManager {
+export class SquadService {
     static client: PrismaClient = prisma
 
     static logger = GregorLogger.getInstance()
@@ -63,7 +63,7 @@ export class SquadManager {
     }
 
     static removeSummonerFromSquad = async (squad: Squad, summonerId: string) => {
-        await SquadManager.client.squad.update({
+        await SquadService.client.squad.update({
             where: {
                 id: squad.id,
             },
@@ -78,7 +78,7 @@ export class SquadManager {
     }
 
     static updateRefreshDate = async (squad: Squad) => {
-        await SquadManager.client.squad.update({
+        await SquadService.client.squad.update({
             where: {
                 id: squad.id,
             },

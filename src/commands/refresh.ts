@@ -4,8 +4,7 @@ import { Record } from '@prisma/client'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 
-import { SquadManager } from '../models/squad'
-import { upsertRecords } from '../models/record'
+import { SquadService } from '../services/squad'
 
 import { getSummonerMatchIds, getSummonerMatchData } from '../api/riot'
 import { GregorLogger } from '../logger'
@@ -20,7 +19,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
     const userId = interaction.user.id
 
-    const squad = await SquadManager.getSquadForUser(userId)
+    const squad = await SquadService.getSquadForUser(userId)
 
     if (squad == null) {
         await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })
@@ -51,7 +50,7 @@ export const execute = async (interaction: CommandInteraction) => {
             break
         }
 
-        console.log({ matchIds })
+        logger.debug(`Fetched the following match ids for summoner ${summoner.name} (id: ${summoner.id}): ${matchIds.join(', ')}`)
 
         for (const matchId of matchIds) {
             const match = await getSummonerMatchData(matchId)
@@ -63,10 +62,10 @@ export const execute = async (interaction: CommandInteraction) => {
     const records: Record[] = []
 
     // update the database
-    await upsertRecords(records)
+    // await upsertRecords(records)
 
     // refresh the squad
-    await SquadManager.updateRefreshDate(squad)
+    await SquadService.updateRefreshDate(squad)
 
     // tell the user that we've got some new reords
     await interaction.editReply({ content: "Ok, I've updated your squads reords." })

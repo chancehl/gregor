@@ -4,7 +4,7 @@ import { CommandInteraction } from 'discord.js'
 
 import { getSummonerByName } from '../api/riot'
 import { GregorLogger } from '../logger'
-import { SquadManager } from '../models/squad'
+import { SquadService } from '../services/squad'
 
 export const DEFAULT_SQUAD_NAME = 'the goon squad'
 export const DEFAULT_REGION = 'NA'
@@ -63,7 +63,7 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     // check to see if this player already has a squad
-    const existingSquad = await SquadManager.getSquadForUser(userId)
+    const existingSquad = await SquadService.getSquadForUser(userId)
 
     if (existingSquad != null) {
         logger.error(
@@ -79,7 +79,7 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     // create team
-    await SquadManager.createSquad({
+    await SquadService.createSquad({
         name: nameInput,
         ownerId: userId,
         region: regionInput as Region,

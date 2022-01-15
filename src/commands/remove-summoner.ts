@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 import { getSummonerByName } from '../api/riot'
 
-import { SquadManager } from '../models/squad'
+import { SquadService } from '../services/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -17,7 +17,7 @@ export const execute = async (interaction: CommandInteraction) => {
     const userId = interaction.user.id
     const summonerName = interaction.options.getString('summoner')
 
-    const squad = await SquadManager.getSquadForUser(userId)
+    const squad = await SquadService.getSquadForUser(userId)
 
     if (squad == null) {
         await interaction.reply({ content: `You do not own a squad. Type \`/create-squad\` to create one.`, ephemeral: true })
@@ -45,7 +45,7 @@ export const execute = async (interaction: CommandInteraction) => {
         return
     }
 
-    await SquadManager.removeSummonerFromSquad(squad, summoner.id)
+    await SquadService.removeSummonerFromSquad(squad, summoner.id)
 
     await interaction.reply({ content: `Removed summoner **${summonerName}** from your squad.`, ephemeral: true })
 }

@@ -41,11 +41,17 @@ export class SquadManager {
 
     static addSummonerToSquad = async (squad: Squad, summoner: Summoner) => {
         try {
-            await this.client.summoner.update({
+            await this.client.summoner.upsert({
                 where: {
                     id: summoner.id,
                 },
-                data: {
+                create: {
+                    id: summoner.id,
+                    name: summoner.name,
+                    puuid: summoner.puuid,
+                    squadId: squad.id,
+                },
+                update: {
                     squadId: squad.id,
                 },
             })

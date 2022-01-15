@@ -39,7 +39,7 @@ export const execute = async (interaction: CommandInteraction) => {
         return
     }
 
-    if (squad.summoners.find((squadSummoner) => squadSummoner.id === summoner.id)) {
+    if (!squad.summoners.map((summoner) => summoner.id).includes(summoner.id)) {
         await interaction.reply({ content: `That summoner is not currently on your squad.`, ephemeral: true })
 
         return

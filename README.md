@@ -11,7 +11,7 @@ Gregor is a discord bot who will allow users to create squads and compete agains
 | `/create-squad` | none       | `/create-squad`                                  |                                                                                                                             |
 |                 | name       | `/create-squad name: The cool kids`              |                                                                                                                             |
 |                 | summoners  | `/create-squad summoners: Jim, Bob, Jones`       | Comma separated                                                                                                             |
-|                 | region     | `/create-squad region: NA`                       | Must be one of: NA, KR, CN                                                                                                  |
+|                 | region     | `/create-squad region: NA`                       | Must be one of: NA, EU, KR                                                                                                  |
 |                 | rules      | `/create-squad rules: ONLY_SNOWBALL, ONLY_SQUAD` | A comma separated list of rules that you wish you apply to your squad. The rule must be valid and exist in the table below. |
 
 ![/create-squad](./demo/gifs/create-squad.gif)

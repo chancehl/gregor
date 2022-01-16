@@ -23,8 +23,10 @@ model Summoner {
   id      String @id
   puuid   String
   name    String
-  Squad   Squad? @relation(fields: [squadId], references: [id])
+  Squad   Squad? @relation(fields: [squadId], references: [id], onDelete: Cascade)
   squadId Int?
+
+  @@map("summoners")
 }
 
 model Record {
@@ -34,7 +36,7 @@ model Record {
   value        String?
   participants String[]
   squadId      Int?
-  Squad        Squad?     @relation(fields: [squadId], references: [id])
+  Squad        Squad?     @relation(fields: [squadId], references: [id], onDelete: Cascade)
 
   @@map("records")
 }

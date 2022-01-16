@@ -85,7 +85,11 @@ export const execute = async (interaction: CommandInteraction) => {
         ownerId: userId,
         region: regionInput as Region,
         refreshedOn: new Date().toISOString(),
-        summoners,
+        summoners: summoners.map((summoner) => ({
+            id: summoner.id,
+            name: summoner.name,
+            puuid: summoner.puuid,
+        })),
         records: DEFAULT_RECORDS,
     })
 

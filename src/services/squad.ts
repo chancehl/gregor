@@ -5,6 +5,8 @@ import { prisma } from './prisma'
 
 type PartialRecord = Omit<Record, 'id' | 'squadId'>
 
+type PartialSummoner = Omit<Summoner, 'squadId'>
+
 export class SquadService {
     static client: PrismaClient = prisma
 
@@ -12,7 +14,7 @@ export class SquadService {
 
     constructor() {}
 
-    static createSquad = async (squad: Omit<Squad, 'id'> & { summoners: Summoner[]; records: PartialRecord[] }) => {
+    static createSquad = async (squad: Omit<Squad, 'id'> & { summoners: PartialSummoner[]; records: PartialRecord[] }) => {
         return await this.client.squad.create({
             include: {
                 records: true,

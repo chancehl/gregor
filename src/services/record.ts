@@ -17,16 +17,17 @@ export class RecordService {
             },
         }))
 
-        const record = this.computeRecord(filteredMatches, squad, RecordType.MOST_PERSONAL_KILLS, 'kills')
+        const mostPersonalKillsRecord = this.computeRecord(filteredMatches, squad, RecordType.MOST_PERSONAL_KILLS, 'kills')
+        const mostPersonalDeathsRecord = this.computeRecord(filteredMatches, squad, RecordType.MOST_PERSONAL_DEATHS, 'deaths')
 
-        return [record]
+        return [mostPersonalKillsRecord, mostPersonalDeathsRecord]
     }
 
     private static computeRecord = (matches: Match[], squad: Squad & { records: PrismaRecord[] }, recordType: RecordType, key: keyof Participant) => {
         let record: PrismaRecord = squad.records.find((record) => record.type === recordType) as PrismaRecord
 
         for (const match of matches) {
-            this.logger.debug(`Evaluating match id ${match.metadata.matchId} to see if any records were broken`)
+            this.logger.debug(`Evaluating match id ${match.metadata.matchId} to see the ${recordType} record was broken`)
 
             const participants = match.info.participants
 

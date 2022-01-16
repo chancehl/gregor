@@ -3,6 +3,7 @@ import { Region } from '@prisma/client'
 import { CommandInteraction } from 'discord.js'
 
 import { getSummonerByName } from '../api/riot'
+import { DEFAULT_RECORDS } from '../constants/records'
 import { GregorLogger } from '../logger'
 import { SquadService } from '../services/squad'
 
@@ -85,6 +86,7 @@ export const execute = async (interaction: CommandInteraction) => {
         region: regionInput as Region,
         refreshedOn: new Date().toISOString(),
         summoners,
+        records: DEFAULT_RECORDS,
     })
 
     // inform invoker

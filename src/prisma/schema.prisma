@@ -30,8 +30,8 @@ model Summoner {
 model Record {
   id           Int        @id @default(autoincrement())
   type         RecordType
-  owner        String
-  value        String
+  owner        String?
+  value        String?
   participants String[]
   squadId      Int?
   Squad        Squad?     @relation(fields: [squadId], references: [id])

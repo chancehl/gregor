@@ -1,7 +1,9 @@
-import { PrismaClient, Squad, Summoner } from '@prisma/client'
+import { PrismaClient, Record, Squad, Summoner } from '@prisma/client'
 import { GregorLogger } from '../logger'
 
 import { prisma } from './prisma'
+
+type PartialRecord = Omit<Record, 'id' | 'squadId'>
 
 export class SquadService {
     static client: PrismaClient = prisma
@@ -10,13 +12,22 @@ export class SquadService {
 
     constructor() {}
 
-    static createSquad = async (squad: Omit<Squad, 'id'> & { summoners: Summoner[] }) => {
+    static createSquad = async (squad: Omit<Squad, 'id'> & { summoners: Summoner[]; records: PartialRecord[] }) => {
         return await this.client.squad.create({
+            include: {
+                records: true,
+                summoners: true,
+            },
             data: {
                 ...squad,
                 summoners: {
                     createMany: {
                         data: squad.summoners,
+                    },
+                },
+                records: {
+                    createMany: {
+                        data: squad.records,
                     },
                 },
             },
@@ -27,7 +38,15 @@ export class SquadService {
         try {
             this.logger.debug(`Finding squad for ownerId: ${ownerId}`)
 
-            return await this.client.squad.findFirst({ where: { ownerId }, include: { records: true, summoners: true } })
+            return await this.client.squad.findFirst({
+                where: {
+                    ownerId,
+                },
+                include: {
+                    records: true,
+                    summoners: true,
+                },
+            })
         } catch (error: any) {
             this.logger.error(`Encountered an error while running prisma.squad.findFirst: ${error.message}`)
 

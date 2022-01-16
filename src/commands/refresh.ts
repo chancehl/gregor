@@ -4,10 +4,13 @@ import { Record } from '@prisma/client'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 
-import { SquadService } from '../services/squad'
-
 import { getSummonerMatchIds, getSummonerMatchData } from '../api/riot'
+
 import { GregorLogger } from '../logger'
+
+import { RecordService } from '../services/record'
+import { EmbedService } from '../services/embed'
+import { SquadService } from '../services/squad'
 
 // prettier-ignore
 export const data = new SlashCommandBuilder()
@@ -18,6 +21,7 @@ export const execute = async (interaction: CommandInteraction) => {
     const logger = GregorLogger.getInstance()
 
     const userId = interaction.user.id
+    const userName = interaction.user.username
 
     const squad = await SquadService.getSquadForUser(userId)
 
@@ -39,6 +43,9 @@ export const execute = async (interaction: CommandInteraction) => {
     // compute the latest records
     await promisify(setTimeout)(4000)
 
+    const matches = []
+
+    // fetch all matches for the summoners on this squad since the last time this squad was refreshed
     for (const summoner of squad.summoners) {
         const matchIds = await getSummonerMatchIds(summoner.puuid, { from: squad.refreshedOn })
 
@@ -55,8 +62,20 @@ export const execute = async (interaction: CommandInteraction) => {
         for (const matchId of matchIds) {
             const match = await getSummonerMatchData(matchId)
 
-            console.log({ match })
+            if (match == null) {
+                logger.warn(`Could not find a match for ${matchId}, skipping this match id`)
+
+                continue
+            }
+
+            matches.push(match)
         }
+    }
+
+    const newRecords = await RecordService.computeRecords(matches, squad)
+
+    if (newRecords.length) {
+        await interaction.editReply({ embeds: [] })
     }
 
     const records: Record[] = []

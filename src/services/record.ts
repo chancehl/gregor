@@ -1,9 +1,11 @@
-import { Record } from '@prisma/client'
+import { Record, Squad, Summoner } from '@prisma/client'
 
 import prisma from '../services/prisma'
 
-export const upsertRecords = async (records: Record[]) => {
-    for (const record of records) {
-        await prisma.record.upsert({ where: { id: record.id }, update: { ...record }, create: { ...record } })
+export class RecordService {
+    static computeRecords = async (records: any[], squad: Squad & { records: Record[]; summoners: Summoner[] }) => {
+        const existingRecords = squad.records
+
+        return []
     }
 }

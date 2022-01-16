@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Match } from '../@types/match'
 
 import { AMERICAS_BASE, NA_BASE } from '../constants/url'
 import { GregorLogger } from '../logger'
@@ -53,7 +54,7 @@ export const getSummonerMatchIds = async (summonerPuuid: string, options?: { fro
     }
 }
 
-export const getSummonerMatchData = async (matchId: string) => {
+export const getSummonerMatchData = async (matchId: string): Promise<Match | null> => {
     try {
         const response = await axios.get(`${AMERICAS_BASE}/lol/match/v5/matches/${matchId}?api_key=${process.env.RIOT_API_KEY}`)
 

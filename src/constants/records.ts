@@ -7,4 +7,6 @@ export const DEFAULT_RECORDS: PartialRecord[] = Object.keys(RecordType).map((key
     participants: [],
     type: key as RecordType,
     value: null,
+    summonerId: null,
+    lastUpdated: new Date().toISOString(),
 }))

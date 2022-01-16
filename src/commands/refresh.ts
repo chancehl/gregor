@@ -1,7 +1,7 @@
 import { promisify } from 'util'
 import { Record } from '@prisma/client'
 
-import { SlashCommandBuilder } from '@discordjs/builders'
+import { Embed, SlashCommandBuilder } from '@discordjs/builders'
 import { CommandInteraction } from 'discord.js'
 
 import { getSummonerMatchIds, getSummonerMatchData } from '../api/riot'
@@ -47,9 +47,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
     // fetch all matches for the summoners on this squad since the last time this squad was refreshed
     for (const summoner of squad.summoners) {
-        const matchIds = await getSummonerMatchIds(summoner.puuid, { from: squad.refreshedOn })
-
-        logger.debug(`Fetched the following match ids for summoner ${summoner.name} (id: ${summoner.id}): ${matchIds.join(', ')}`)
+        const matchIds = await getSummonerMatchIds(summoner.puuid, { from: process.env.BYPASS_TIMEFRAMES ? undefined : squad.refreshedOn })
 
         if (matchIds.length < 1) {
             logger.warn(`Could not find any matches after ${squad.refreshedOn} for summoner ${summoner.name} (puuid: ${summoner.puuid})`)
@@ -57,7 +55,7 @@ export const execute = async (interaction: CommandInteraction) => {
             break
         }
 
-        logger.debug(`Fetched the following match ids for summoner ${summoner.name} (id: ${summoner.id}): ${matchIds.join(', ')}`)
+        logger.debug(`Fetched ${matchIds.length} match ids for summoner ${summoner.name} (id: ${summoner.id})`)
 
         for (const matchId of matchIds) {
             const match = await getSummonerMatchData(matchId)
@@ -72,20 +70,38 @@ export const execute = async (interaction: CommandInteraction) => {
         }
     }
 
-    const newRecords = await RecordService.computeRecords(matches, squad)
+    // Get all records
+    const records = await RecordService.computeRecords(matches, squad)
 
-    if (newRecords.length) {
-        await interaction.editReply({ embeds: [] })
+    const updatedRecords = records.filter((record) => {
+        const currentRecord = squad.records.find((current) => current.type === record.type)
+
+        if (currentRecord && new Date(currentRecord.lastUpdated) < new Date(record.lastUpdated)) {
+            return true
+        }
+
+        return false
+    })
+
+    if (updatedRecords.length) {
+        // modify the squad data
+        squad.records = records
+
+        // update the database
+        await RecordService.updateRecords(updatedRecords)
+
+        // refresh the squad
+        await SquadService.updateRefreshDate(squad)
+
+        // tell ther user
+        await interaction.editReply({ embeds: [EmbedService.generateSquadEmbed(userName, squad)] })
+
+        return
+    } else {
+        logger.debug(`Refresh complete. No records were broken recently for squad ${squad.name} (id: ${squad.id})`)
+
+        await interaction.editReply({ content: `Looks like no records were broken recently. Type \`/squad\` to show your current records.` })
+
+        return
     }
-
-    const records: Record[] = []
-
-    // update the database
-    // await upsertRecords(records)
-
-    // refresh the squad
-    await SquadService.updateRefreshDate(squad)
-
-    // tell the user that we've got some new reords
-    await interaction.editReply({ content: "Ok, I've updated your squads reords." })
 }

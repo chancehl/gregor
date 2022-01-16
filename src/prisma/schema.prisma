@@ -26,6 +26,7 @@ model Summoner {
   Squad   Squad? @relation(fields: [squadId], references: [id], onDelete: Cascade)
   squadId Int?
 
+  Record Record[]
   @@map("summoners")
 }
 
@@ -37,7 +38,10 @@ model Record {
   participants String[]
   squadId      Int?
   Squad        Squad?     @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  summoner     Summoner?  @relation(fields: [summonerId], references: [id])
+  lastUpdated  String
 
+  summonerId String?
   @@map("records")
 }
 
@@ -45,12 +49,17 @@ enum RecordType {
   MOST_PERSONAL_KILLS
   MOST_PERSONAL_DEATHS
   MOST_PERSONAL_ASSISTS
-  HIGHEST_KDA
-  LOWEST_KDA
-  MOST_GOLD
-  HIGHEST_CS
+  HIGHEST_PERSONAL_KDA
+  LOWEST_PERSONAL_KDA
+  MOST_PERSONAL_GOLD
+  MOST_TEAM_GOLD
+  HIGHEST_TEAM_CS
+  HIGHEST_PERSONAL_CS
   FASTEST_GAME
-  LOWEST_CS
+  MOST_TEAM_KILLS
+  MOST_TEAM_DEATHS
+  MOST_TEAM_ASSISTS
+  HIGHEST_TEAM_KDA
 }
 
 enum Region {

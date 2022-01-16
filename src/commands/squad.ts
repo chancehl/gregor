@@ -45,7 +45,7 @@ export const execute = async (interaction: CommandInteraction) => {
             summoners.push(summoner)
         }
 
-        await interaction.reply({ embeds: [EmbedService.generateSquadEmbed(userName, squad, summoners)] })
+        await interaction.reply({ embeds: [EmbedService.generateSquadEmbed(userName, squad)] })
     } catch (error: any) {
         await interaction.reply({ content: `An error occurred while fetching your squad: ${error.message}`, ephemeral: true })
     }
